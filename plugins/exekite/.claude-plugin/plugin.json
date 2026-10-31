@@ -1,0 +1,23 @@
+{
+  "name": "exekite",
+  "displayName": "Exekite",
+  "version": "1.0.0",
+  "description": "Build and test Godot games with Claude. Exekite stores each game, runs engine checks and playtests, and prepares previews, source exports and release builds.",
+  "author": {
+    "name": "Exepad LLC",
+    "url": "https://exekite.com"
+  },
+  "homepage": "https://exekite.com",
+  "repository": "https://github.com/exekite/claude-plugins",
+  "license": "MIT",
+  "privacyPolicyUrl": "https://exekite.com/privacy",
+  "termsOfServiceUrl": "https://exekite.com/terms",
+  "supportUrl": "https://exekite.com/contact",
+  "icon": "./assets/icon.png",
+  "keywords": [
+    "games",
+    "godot",
+    "game-development",
+    "testing"
+  ]
+}

@@ -1,0 +1,47 @@
+# Supplied design and source turns
+
+The live schemas and returned `authoring_contract` are the authority for input shapes. Do not copy server-owned timestamps or provenance into editable objects. Source revision hashes, metadata revisions, and Ship manifest revisions are different guards; use the one named by the operation.
+
+## First game
+
+`create_project` creates a shell, not a playable game. Read its design and project context. Submit the user's pitch, expanded brief, concept, and explicit key-art decision through `set_game_design`, using the current source revision returned by the runtime reads.
+
+The expanded brief contains `title`, `genre`, and `vibe_words`. The concept has its own `title`, `genre`, and uppercase `dimension` (`2D` or `3D`); it needs at least two substantive gameplay blocks, such as `core_loop` and `win_condition`. Put its mood in `art_direction.mood`. `update_game_concept` is a complete concept replacement: start with returned `concept_input` and preserve the parts the user did not request changing. The project's dimension is fixed after design is established.
+
+`key_art_decision: "declined"` is a complete no-paid-media choice for key art at this stage, not a refusal of gameplay sprites, models, sound, or future asset requests. `"requested"` records intent but does not start a provider job. The paid key-art operation, `generate_key_art`, runs like any paid generation when the user asks for it: its own matching `estimate_cost` quote, then the tool. Do not claim the user declined all paid media just because the first build used procedural art.
+
+Start a turn with `purpose: "build"`, `mode: "remote"`, the returned source `base_revision`, a stable `idempotency_key`, and a concrete request. The platform prepares its trusted project harness on activation; author the game scene at `scenes/Main.tscn` and the required scripts/resources. Read existing files after activation instead of assuming the harness is empty.
+
+At first submission, supply the `birth_manifest` describing the game actually built. Its fields are `title`, `genre_label`, and top-level `mood`, unlike the concept's fields. Use no tunables or an empty array when none exist; declared tunables must name supported existing numeric declarations and valid ranges. Use the live example and schema rather than inventing additional manifest fields.
+
+After the first playable submission is accepted, prepare a preview link of its returned verified revision and show that exact preview job before starting a long asset generation or further build stage. Tell the user when it is an intermediate version with placeholder art. Keep the user able to play this verified build while work continues; do not defer every visual result until the whole request is finished. Opening a preview generates no paid media and does not publish the game. See [visual-companion.md](visual-companion.md) for viewing and pinning.
+
+## Edit and verify
+
+After a media job succeeds, you can acquire or activate the source writer at once. Its wallet reservation stays held until its charge settles and comes off the available balance (`get_balance` shows held funds and pending settlement), but it refuses the writer only when the balance left after it is not positive. A terminal generation result does not prove its wallet reservation has settled; `get_account` gives balance/entitlements but does not replace the settlement check. If activation returns `PAID_OPERATION_IN_PROGRESS`, or `ACTIVATION_FAILED` whose details name that cause, keep the generated asset and reconcile the existing media job, hold and charge with `get_job`, `get_balance` and `list_charges`. Settlement normally clears 5–10 minutes after the paid work finishes: wait the returned `retry_after_s` (`settles_after` says when it should clear) before trying again, instead of polling every few seconds; when that is longer than you can wait in this reply, tell the user when to continue. Unavailable settlement data is not zero. Do not regenerate, bypass the reservation, or generate the same asset again. Read the authoring job and `get_turn` before retrying: only after a known terminal failure and settled reservation may you issue a fresh operation for the failed authoring step, if the turn still permits it. An unknown `apply_changes` acknowledgement must be reconciled under its original operation key, not duplicated.
+
+Read the relevant files and their SHA-256 values at a consistent revision or within the selected turn. Use the returned hashes in `apply_changes`, and the current turn `expected_sequence`. Use `expected_sha256: null` only for a genuinely new file. A sequence can advance after checks or other accepted turn operations; refresh `get_turn` when needed.
+
+Use a small coherent batch of writes, literal replacements, patches, moves, or deletions appropriate to the change. Keep platform-managed harness/configuration files outside authored edits. A refused path or protected-file error calls for a supported tool or a revised design, not renamed copies or obfuscated instructions.
+
+One call carries at most 1 MiB. Split a large change across several `apply_changes` calls, a few files per call; a larger call is refused with `REQUEST_TOO_LARGE`, which names the limit and the call's size and changes nothing. A turn's whole draft is limited to 15 MiB (`get_turn` reports `draft_bytes` against `draft_limit_bytes`); land the turn before adding more.
+
+Resolve `FILE_CONFLICT` or `REVISION_CONFLICT` by reading the current state and reconciling the user's intended change. Do not overwrite concurrent Studio work. A changed request requires a new operation key only after the previous operation's outcome is known.
+
+Use `check_scripts` or the parse profile for targeted syntax feedback. Use the full gate when there is a complete candidate to assess. A logical turn has a bounded gate budget, including final submission, and parking does not reset it. Keep capacity for `submit_turn`; repeating an unchanged failing tree is not progress. Read the reported errors, repair their actual cause, then recheck the changed candidate.
+
+`submit_turn` runs the final gate and returns acceptance or a real failure. With `on_fail: "keep_open"`, repair the retained draft when the turn permits it; with rollback, inspect its resulting state before continuing. A prior successful check does not replace the final submission result. Treat the game as landed only when the returned result says it was accepted and supplies its revision.
+
+## Deliver the playable result
+
+After an accepted playable creation or edit, automatically call `create_preview_link` for the returned verified revision with one stable operation key, then `create_companion_link` for that exact preview job, giving the user its link, unless the user asked not to prepare or show a preview. Show the queued/building preview immediately and reconcile the same job until ready. This is part of delivering the user's game; do not leave a "Validation finished" surface as the final result or require the user to ask for the game. If the requested stage is an intermediate build, label it accurately. Tell the user when the link expires (the job's `expires_at`, one hour by default) and that a fresh preview can be prepared afterwards. The link is temporary and unlisted: anyone holding it can open it until it expires, and disconnecting this connection ends it early, so share it only as the user wants.
+
+Introduce the game in the conversation: title, objective, movement/actions, how to start or restart, the requested changes, and what was actually tested. Deliver the playable view and introduction before optional reports or Library artifacts. Include the playable link and disclose meaningful limitations. Keep raw job identifiers and gate diagnostics secondary. Never call an unaccepted or failed preview playable. Preserve an existing played/pinned version; an updated accepted build is offered without interrupting their game. Hosts without an inline view use the normal owner-authorized browser companion.
+
+## Pause and resume
+
+Stop Game Test when its observations are finished. For a resumable interruption, call `abort_turn` with `retain_draft: true` and keep the returned turn identifier and base revision. For discarded work, use `retain_draft: false` and confirm rollback.
+
+On return, read `get_project_status` first: its `active_jobs` and `open_turns` list this connection's unfinished work on the game, and `list_jobs` and `list_turns` page further back, newest first. Then read `get_turn` and use `resume_turn` with the current expected base revision. A turn can be resumed only until its logical deadline, 6 hours after `start_turn` (`logical_deadline` in the turn metadata). A parked draft stays readable for 24 hours, but after the logical deadline `resume_turn` returns `TURN_EXPIRED`: read the retained files with `get_failed_attempt`, start a new turn from the current revision and reapply them. A draft also cannot resume once the game moved to another revision, for example after paid media, a Ship save or a tunables change landed. A conflict, expired draft, or exhausted budget requires an explicit reconciliation; a new turn must not be presented as continuation of an uncommitted draft. Status reads do not keep a writer lease alive.
+
+Before ending an interrupted conversation, give the user the project/turn/job identifiers and the next action supported by the observed state. Do not claim a retained draft or rollback until the tool has confirmed it.
