@@ -16,7 +16,7 @@ The user's **Keep this view** selection is deliberate. Continue backend work wit
 
 Do not replace a pinned or actively played build with an updated preview or watch session automatically. Offer the new result so the user can switch. Prepare new snapshots only after an accepted revision or to replace an expired preview the user still wants; polling and page opening must not repeatedly export the game.
 
-On this connection every view opens this way: call `create_companion_link` with the same `project_id`, target, and a stable `idempotency_key`. Return its `url` and explain that the same owner signs in to Studio. The link expires after ten minutes; the claimed viewing session lasts at most thirty minutes and stays bound to the original MCP grant. Reuse the key after an uncertain response. Once a link has actually expired, a newly requested handoff uses a new key. Never put a Studio or MCP token in a URL, chat, or command.
+On this connection every view opens this way: call `create_companion_link` with the same `project_id`, target, and a stable `idempotency_key`. Return the companion link's `url` and explain that the same owner signs in to Studio. The link expires after ten minutes; the claimed viewing session lasts at most thirty minutes and stays bound to the original MCP grant. Reuse the key after an uncertain response. Once a link has actually expired, a newly requested handoff uses a new key. Never put a Studio or MCP token in a URL, chat, or command.
 
 Blender is watch-only. Game Test human takeover is available only where the host advertises it and the person explicitly selects it. Let the server reject conflicting agent inputs while a person owns control. Playing a prepared browser build is separate from controlling the agent's running test.
 

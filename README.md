@@ -1,8 +1,8 @@
 # Exekite for Claude
 
-Exekite is a game studio you use through Claude. Claude writes a game's design, GDScript and scenes; Exekite stores the game, runs Godot's checks and playtests in an isolated workspace, keeps each verified revision, and prepares preview links, source exports and release builds. Generated sprites, images, sound, music and 3D models are made only for a game in your Exekite account, as inputs to its build.
+Exekite is a game studio you use through Claude. Claude writes a game's design, game code and scenes; Exekite stores the game, runs automated checks and playtests in an isolated workspace, keeps each verified revision, and prepares preview links, source exports and release builds. Generated sprites, images, sound, music and 3D models are made only for a game in your Exekite account, as inputs to its build.
 
-This repository holds the [Exekite plugin](https://github.com/exekite/claude-plugins/tree/main/plugins/exekite): the Exekite connector, `https://mcp.exekite.com/mcp`, and 15 skills that teach Claude the Exekite workflow and Godot 4 craft.
+This repository holds the [Exekite plugin](https://github.com/exekite/claude-plugins/tree/main/plugins/exekite): the Exekite connector, `https://mcp.exekite.com/mcp`, and 15 skills that teach Claude the Exekite workflow and game development.
 
 ## What you need
 
@@ -39,7 +39,7 @@ New versions reach your account when the marketplace syncs: choose Check for upd
 
 1. Add the connector. If Exekite is listed in Claude's connectors directory, open Customize → Connectors, select Discover, search for Exekite and choose Connect to Claude on its page. Otherwise add it as a custom connector: open Customize → Connectors, choose Add, then Add custom connector (in some versions, Custom, then Web), name it Exekite, enter `https://mcp.exekite.com/mcp`, keep the sign-in settings Claude detects, choose Add, then choose Connect.
 2. Exekite's consent page opens: check that it names the Exekite account you mean to use, choose the games and permissions, and allow.
-3. Add the skills. Download the skill ZIPs from this repository's latest release and upload each one under Customize → Skills. Start with `exekite-studio.zip`, the workflow skill. The others are Godot craft skills it refers to by name.
+3. Add the skills. Download the skill ZIPs from this repository's latest release and upload each one under Customize → Skills. Start with `exekite-studio.zip`, the workflow skill. The others are game-development skills it refers to by name.
 
 ### Settings, plans and limits
 

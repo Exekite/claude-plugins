@@ -1,8 +1,8 @@
 # Exekite for Claude
 
-Build and test Godot games with Claude. Claude writes each game's design, GDScript and scenes; Exekite stores the game, runs Godot's checks and playtests in an isolated workspace, keeps every verified revision, and prepares preview links, source exports and release builds.
+Build and test games with Claude. Claude writes each game's design, game code and scenes; Exekite stores the game, runs automated checks and playtests in an isolated workspace, keeps every verified revision, and prepares preview links, source exports and release builds.
 
-The plugin adds the Exekite connector (`https://mcp.exekite.com/mcp`) and 15 skills: the `exekite-studio` workflow and 14 Godot 4 craft skills covering syntax, scene layout, signals, object lifetimes, collisions, moving bodies, resources, tile maps, HUD layout, start and pause input, debugging and asset wiring.
+The plugin adds the Exekite connector (`https://mcp.exekite.com/mcp`) and 15 skills: the `exekite-studio` workflow and 14 game-development skills covering syntax, scene layout, signals, object lifetimes, collisions, moving bodies, resources, tile maps, HUD layout, start and pause input, debugging and asset wiring.
 
 ## Install
 
