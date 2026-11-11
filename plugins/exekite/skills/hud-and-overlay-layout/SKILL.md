@@ -109,7 +109,7 @@ A 1280×720 game fitted into a 390px-wide phone has only about 390×219px of
 visible game content. A 16-unit font becomes 4.88px and a 48-unit Start button
 becomes 14.63px high. Anchoring alone cannot fix this.
 
-Read `responsive_overlay.gd` in **this skill's directory** for a complete,
+Read `responsive_overlay.md` in **this skill's directory** for a complete,
 native-tested example. Copy and adapt it into the game's own scripts: its title,
 counts and action names are examples. Never reference the skill's `/opt/...`
 path from exported game code, and do not register it as a platform autoload.

@@ -12,7 +12,7 @@
       "name": "exekite",
       "source": "./plugins/exekite",
       "description": "Build and test games with Claude. Exekite stores each game, runs automated checks and playtests, and prepares previews, source exports and release builds.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "Exepad LLC",
         "url": "https://exekite.com"

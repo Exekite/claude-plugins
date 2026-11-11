@@ -1,3 +1,8 @@
+# `responsive_overlay.gd`
+
+The file `responsive_overlay.gd` whole, carried as Markdown: copy the code below into a `.gd` file in the game's own scripts.
+
+```gdscript
 extends CanvasLayer
 ## Authored UI example, not a platform autoload. Adapt its actions and content.
 signal action_requested(action: String)
@@ -162,3 +167,4 @@ func physical_rect(control: Control) -> Rect2:
 	var transform := get_viewport().get_screen_transform() * control.get_global_transform_with_canvas()
 	var rect := transform * Rect2(Vector2.ZERO, control.size)
 	return Rect2(rect.position / _screen_pixel_ratio(), rect.size / _screen_pixel_ratio())
+```

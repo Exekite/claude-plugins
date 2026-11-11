@@ -1,7 +1,7 @@
 {
   "name": "exekite",
   "displayName": "Exekite",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Build and test games with Claude. Exekite stores each game, runs automated checks and playtests, and prepares previews, source exports and release builds.",
   "author": {
     "name": "Exepad LLC",
